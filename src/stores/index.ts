@@ -28,6 +28,7 @@ export const usePostsData = defineStore("posts", () => {
 
 			if (postIndex > -1) {
 				posts.value = [_posts.value[postIndex]];
+				changePageOnNumber(1);
 
 				return;
 			}
@@ -52,6 +53,43 @@ export const usePostsData = defineStore("posts", () => {
 			rerenderState();
 		}
 	);
+
+	const page = shallowRef(1);
+
+	const pagesNumber = computed(() => {
+		return Math.ceil(posts.value.length / 70);
+	});
+
+	const prevPage = computed(() => {
+		return (page.value - 1) * 70;
+	});
+
+	const nextPage = computed(() => {
+		return page.value * 70;
+	});
+
+	const postsByPage = computed(() => {
+		return posts.value.slice(prevPage.value, nextPage.value);
+	});
+
+	const changePageOnNext = () => {
+		//Проверка здесь не нужна из-за Vuetify, но решил её указать для наглядности
+		if (page.value >= pagesNumber.value) return;
+
+		page.value += 1;
+	};
+
+	const changePageOnPerv = () => {
+		//Проверка здесь не нужна из-за Vuetify, но решил её указать для наглядности
+		if (page.value <= 1) return;
+
+		page.value -= 1;
+	};
+
+	const changePageOnNumber = (pageNumber: number) => {
+		page.value = pageNumber;
+	};
+
 	const getData = (mode: getterMode) => {
 		const posts = localStorage.getItem("_posts");
 
@@ -105,6 +143,11 @@ export const usePostsData = defineStore("posts", () => {
 		load,
 		posts,
 		searchValue,
+		pagesNumber,
+		changePageOnNext,
+		changePageOnPerv,
+		changePageOnNumber,
+		postsByPage,
 		getPostsData,
 		getFirstPagePostsData,
 		editPost,
