@@ -1,5 +1,5 @@
 // Симуляция API
-import { post } from "../constants";
+import { Post } from "../constants";
 
 const posts = [
 	{
@@ -4004,8 +4004,10 @@ const posts = [
 	},
 ];
 
-const getPosts = (): post[] => {
+export const getPosts = (): Post[] => {
 	return posts;
 };
 
-export default getPosts;
+export const getFirstPage = (): Post[] => {
+	return posts.slice(0, 70);
+};
