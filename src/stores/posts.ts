@@ -3,11 +3,12 @@ import { Ref, ref, shallowRef, computed, watch } from "vue";
 
 import { Post } from "../constants";
 
-import { getPosts, getFirstPage } from "../API/get-posts";
-
-type getterMode = "all" | "page";
+import { getPosts } from "../API/get-posts";
 
 export const usePostsData = defineStore("posts", () => {
+	//Если бы у нас был настоящий API-запрос,
+	//то этот флаг отвечал бы за отображение загрузочного спинера
+	//Хотел добавить анимацию подзагрузки при переходе на другую страницу, но подумал это будет излишне
 	const load = shallowRef(true);
 
 	const _posts: Ref<Post[]> = ref([]);
@@ -37,6 +38,8 @@ export const usePostsData = defineStore("posts", () => {
 		posts.value = _posts.value;
 	};
 
+	//Наблюдатели за изменением постов и строки по поиску
+	//Добавлена фича отделения модели от её вьюхи для того, чтобы в будущем можно было усложнить или изменить фильтрацию
 	watch(
 		() => _posts.value,
 		() => {
@@ -60,16 +63,24 @@ export const usePostsData = defineStore("posts", () => {
 		return Math.ceil(posts.value.length / 70);
 	});
 
+	//От какого элемента начинается выбраная страница
 	const prevPage = computed(() => {
 		return (page.value - 1) * 70;
 	});
 
+	//Элемент которым заканчивается выбранная страница
 	const nextPage = computed(() => {
 		return page.value * 70;
 	});
 
+	//Добавление индекса делают здесь, чтобы не пересчитывать каждый раз всю 1000 элементов
 	const postsByPage = computed(() => {
-		return posts.value.slice(prevPage.value, nextPage.value);
+		return posts.value.slice(prevPage.value, nextPage.value).map((post, index) => {
+			return {
+				...post,
+				index: prevPage.value + index + 1,
+			};
+		});
 	});
 
 	const changePageOnNext = () => {
@@ -104,11 +115,8 @@ export const usePostsData = defineStore("posts", () => {
 		load.value = false;
 	};
 
-	const getFirstPagePostsData = () => {
-		_posts.value = getFirstPage();
-		load.value = false;
-	};
-
+	// Если бы элементов было больше чем 1000 в разы, то можно было бы задуматься о создании коллекции Map().
+	// Но так как это тестовое, решил не запариваться, хотя и сложного в этом ничего нет.
 	const editPost = (id: string, newPostName: string) => {
 		const index = _posts.value.findIndex((post) => post.id === id);
 
@@ -133,6 +141,8 @@ export const usePostsData = defineStore("posts", () => {
 
 	const deletePost = (id: string) => {
 		_posts.value = _posts.value.filter((post) => post.id !== id);
+		//Эта строчка здесь не нужна, если поиск идет по нескольким постам.
+		//В моём случае мы смотрим только на один пост, поэтому указал для лучшего юзер экспириенса
 		searchValue.value = "";
 	};
 
@@ -146,7 +156,6 @@ export const usePostsData = defineStore("posts", () => {
 		changePageOnNumber,
 		postsByPage,
 		getPostsData,
-		getFirstPagePostsData,
 		editPost,
 		addNewPost,
 		deletePost,

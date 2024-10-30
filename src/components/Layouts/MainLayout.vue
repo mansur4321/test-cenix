@@ -6,7 +6,7 @@ import ButtonComponent from "../UI-components/ButtonComponent.vue";
 
 import { shallowRef, onMounted } from "vue";
 
-import { usePostsData } from "../../stores/index";
+import { usePostsData } from "../../stores/posts";
 
 const postsData = usePostsData();
 
@@ -17,10 +17,7 @@ const toggleOverlay = () => {
 };
 
 onMounted(() => {
-	postsData.getFirstPagePostsData();
-	setTimeout(function () {
-		postsData.getPostsData();
-	}, 500);
+	postsData.getPostsData();
 });
 </script>
 
@@ -53,10 +50,9 @@ onMounted(() => {
 			<transition name="slide">
 				<div class="mt-12 posts-wrapper">
 					<post-card
-						v-for="(post, index) of postsData.postsByPage"
+						v-for="post of postsData.postsByPage"
 						:key="post.id"
 						:post="post"
-						:index="index"
 					/>
 				</div>
 			</transition>

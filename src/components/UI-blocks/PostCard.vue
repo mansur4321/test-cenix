@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { defineProps, shallowRef } from "vue";
 
-import { usePostsData } from "../../stores";
+import { usePostsData } from "../../stores/posts";
 import { Post } from "../../constants";
 
 const { post, index } = defineProps<{ post: Post; index: number }>();
@@ -38,7 +38,7 @@ const editPost = () => {
 					v-slot:title
 					class="position-relative"
 				>
-					Post №{{ index + 1 }}
+					Post №{{ post.index }}
 
 					<div
 						v-if="editingMode"

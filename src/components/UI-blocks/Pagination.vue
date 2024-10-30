@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { usePostsData } from "../../stores/index";
+import { usePostsData } from "../../stores/posts";
 
 const postsData = usePostsData();
 

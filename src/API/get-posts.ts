@@ -4007,7 +4007,3 @@ const posts = [
 export const getPosts = (): Post[] => {
 	return posts;
 };
-
-export const getFirstPage = (): Post[] => {
-	return posts.slice(0, 70);
-};

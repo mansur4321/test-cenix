@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { shallowRef, watch, defineProps } from "vue";
 
-import { usePostsData } from "../../stores/index";
+import { usePostsData } from "../../stores/posts";
 
 const { overlay, toggleOverlay } = defineProps<{ overlay: boolean; toggleOverlay: () => void }>();
 const postsData = usePostsData();

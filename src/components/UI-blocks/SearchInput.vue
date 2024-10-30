@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, shallowRef } from "vue";
 
-import { usePostsData } from "../../stores/index";
+import { usePostsData } from "../../stores/posts";
 
 const searchString = shallowRef();
 const postsData = usePostsData();
