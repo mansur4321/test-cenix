@@ -4,7 +4,7 @@ import { defineProps, shallowRef } from "vue";
 import { usePostsData } from "../../stores/posts";
 import { Post } from "../../constants";
 
-const { post, index } = defineProps<{ post: Post; index: number }>();
+const { post } = defineProps<{ post: Post; index: number }>();
 
 const postsData = usePostsData();
 
