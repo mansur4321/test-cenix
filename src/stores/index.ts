@@ -90,26 +90,23 @@ export const usePostsData = defineStore("posts", () => {
 		page.value = pageNumber;
 	};
 
-	const getData = (mode: getterMode) => {
+	const getPostsData = () => {
 		const posts = localStorage.getItem("_posts");
 
-		if (posts === null) {
-			_posts.value = mode === "all" ? getPosts() : getFirstPage();
+		if (posts !== null) {
+			_posts.value = JSON.parse(posts);
 			load.value = false;
 
 			return;
 		}
 
-		_posts.value = JSON.parse(posts);
+		_posts.value = getPosts();
 		load.value = false;
 	};
 
-	const getPostsData = () => {
-		getData("all");
-	};
-
 	const getFirstPagePostsData = () => {
-		getData("page");
+		_posts.value = getFirstPage();
+		load.value = false;
 	};
 
 	const editPost = (id: string, newPostName: string) => {
